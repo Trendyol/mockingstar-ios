@@ -1,0 +1,22 @@
+{
+  "appFilterConfigs" : {
+    "domains" : [
+
+    ],
+    "headerFilterDefaultStyleIgnore" : true,
+    "pathMatchingRatio" : 1,
+    "queryFilterDefaultStyleIgnore" : true
+  },
+  "headerConfigs" : [
+
+  ],
+  "mockFilterConfigs" : [
+
+  ],
+  "pathConfigs" : [
+
+  ],
+  "queryConfigs" : [
+
+  ]
+}
