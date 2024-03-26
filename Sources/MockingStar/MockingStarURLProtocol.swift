@@ -13,16 +13,20 @@ class MockingStarURLProtocol: URLProtocol {
     }()
 
     override class func canInit(with request: URLRequest) -> Bool {
-        request.url?.host != "localhost" && request.url?.port != MockingStar.shared.defaultPort
+        guard let url = request.url else { return false }
+        return shouldMockingStarProxy(for: url) && url.host != "localhost" && url.port != MockingStar.shared.defaultPort
     }
-    override open class func canInit(with task: URLSessionTask) -> Bool { 
-        task.currentRequest?.url?.host != "localhost" && task.currentRequest?.url?.port != MockingStar.shared.defaultPort
+
+    override open class func canInit(with task: URLSessionTask) -> Bool {
+        guard let url = task.currentRequest?.url else { return false }
+        return shouldMockingStarProxy(for: url) && url.host != "localhost" && url.port != MockingStar.shared.defaultPort
     }
+
     override open class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override open func startLoading() {
         guard let url = request.url else { return }
-        guard shouldMockingStarProxy(for: url) else { return session.dataTask(with: request).resume() }
+        guard MockingStarURLProtocol.shouldMockingStarProxy(for: url) else { return session.dataTask(with: request).resume() }
 
         let mockDomain = ProcessInfo.processInfo.environment["MockingStarDomain", default: ""]
         let shouldNotUseLiveData = ProcessInfo.processInfo.environment["MockingStar_DoNotUseLive"] == "1"
@@ -45,7 +49,7 @@ class MockingStarURLProtocol: URLProtocol {
         let mockRequestBody = MockingStarRequestBody(method: request.httpMethod ?? "",
                                                      url: url,
                                                      header: request.allHTTPHeaderFields,
-                                                     body: request.httpBody)
+                                                     body: try? request.httpBodyStream?.readData())
 
         mockRequest.httpBody = try? JSONEncoder().encode(mockRequestBody)
         session.dataTask(with: mockRequest).resume()
@@ -57,7 +61,7 @@ class MockingStarURLProtocol: URLProtocol {
         }
     }
 
-    private func shouldMockingStarProxy(for url: URL) -> Bool {
+    private static func shouldMockingStarProxy(for url: URL) -> Bool {
         let domain: String
 
 #if os(iOS)

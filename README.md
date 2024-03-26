@@ -5,6 +5,16 @@ With just a single line of code, you can use Mocking Star in your project.
 
 ![](https://github.com/Trendyol/mockingstar-ios/blob/main/MockingStarExample/MockingStarDemo.gif)
 
+### Key Features
+
+- **Mocking Requests**: Easily mock requests and test different cases with scenarios.
+- **Modifying Requests**: Modify intercepted requests to test different edge cases, allowing you to assess your application's performance under different conditions.
+- **Debugging Support**: Use Mocking Star to debug your network requests on your mac.
+- **UI Testing**: Integrate Mocking Star into your UI tests, creating a reliable and controlled testing environment to validate your mobile application's functionality.
+
+Mocking Star App -> [Mocking Star](https://github.com/Trendyol/mockingstar) <br>
+Android Library -> [Mocking Star Android Library](https://github.com/Trendyol/mockingstar-android)
+
 ## Getting Started 🔥
 To begin using Mocking Star in your Swift application, simply add the following line of code:
 
