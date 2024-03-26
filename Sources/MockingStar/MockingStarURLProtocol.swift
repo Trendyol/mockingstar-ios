@@ -45,7 +45,7 @@ class MockingStarURLProtocol: URLProtocol {
         let mockRequestBody = MockingStarRequestBody(method: request.httpMethod ?? "",
                                                      url: url,
                                                      header: request.allHTTPHeaderFields,
-                                                     body: request.httpBody)
+                                                     body: try? request.httpBodyStream?.readData())
 
         mockRequest.httpBody = try? JSONEncoder().encode(mockRequestBody)
         session.dataTask(with: mockRequest).resume()
