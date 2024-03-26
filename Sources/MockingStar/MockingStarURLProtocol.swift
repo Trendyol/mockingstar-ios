@@ -22,6 +22,7 @@ class MockingStarURLProtocol: URLProtocol {
 
     override open func startLoading() {
         guard let url = request.url else { return }
+        guard shouldMockingStarProxy(for: url) else { return session.dataTask(with: request).resume() }
 
         let mockDomain = ProcessInfo.processInfo.environment["MockingStarDomain", default: ""]
         let shouldNotUseLiveData = ProcessInfo.processInfo.environment["MockingStar_DoNotUseLive"] == "1"
@@ -55,6 +56,37 @@ class MockingStarURLProtocol: URLProtocol {
             dataTasks.forEach { $0.cancel() }
         }
     }
+
+    private func shouldMockingStarProxy(for url: URL) -> Bool {
+        let domain: String
+
+#if os(iOS)
+        if #available(iOS 16.0, *) {
+            domain = url.host() ?? ""
+        } else {
+            domain = url.host ?? ""
+        }
+#elseif os(macOS)
+        if #available(macOS 13.0, *) {
+            domain = url.host() ?? ""
+        } else {
+            domain = url.host ?? ""
+        }
+#endif
+
+
+        let domains = MockingStar.shared.injectedDomains
+        guard !domains.isEmpty else { return true }
+
+        var requestDomains: [String] = []
+
+        for index in 0..<domain.components(separatedBy: ".").dropLast().count {
+            requestDomains.append(domain.components(separatedBy: ".").dropFirst(index).joined(separator: "."))
+        }
+
+        return domains.contains(where: { requestDomains.contains($0) })
+    }
+
 }
 
 extension MockingStarURLProtocol: URLSessionDataDelegate {

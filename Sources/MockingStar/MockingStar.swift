@@ -11,6 +11,7 @@ public final class MockingStar {
     public static let shared: MockingStar = .init()
     public var defaultPort: Int = 8008
     private var mockScenarios: [MockScenario] = []
+    public var injectedDomains: [String] = []
 
     private init() {
         URLProtocol.registerClass(MockingStarURLProtocol.self)
