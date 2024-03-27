@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "MockingStar",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v13),
         .macOS(.v10_15)
     ],
     products: [
