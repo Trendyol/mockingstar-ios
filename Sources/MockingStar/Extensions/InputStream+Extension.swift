@@ -10,24 +10,27 @@ import Foundation
 extension InputStream {
     public func readData(bufferSize: Int = 1024) throws -> Data {
         var buffer = [UInt8](repeating: 0, count: bufferSize)
-        var data: [UInt8] = []
+        var data = Data()
 
         open()
 
-        while true {
-            let count = read(&buffer, maxLength: buffer.capacity)
+        while hasBytesAvailable {
+            let bytesRead = read(&buffer, maxLength: bufferSize)
 
-            guard count >= 0 else {
+            if bytesRead < 0 {
+                // Handle error
                 close()
-                throw StreamError.Error(error: streamError, partialData: data)
+                throw StreamError.Error(error: streamError, partialData: [UInt8](data))
             }
 
-            guard count != 0 else {
-                close()
-                return Data(data)
+            if bytesRead > 0 {
+                // Append the read bytes to the Data object
+                data.append(buffer, count: bytesRead)
             }
-
-            data.append(contentsOf: (buffer.prefix(count)))
         }
+
+        close()
+
+        return data
     }
 }
