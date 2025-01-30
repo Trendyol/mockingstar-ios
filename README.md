@@ -1,3 +1,5 @@
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Trendyol/mockingstar-ios/badge)](https://scorecard.dev/viewer/?uri=github.com/Trendyol/mockingstar-ios)
 # Mocking Star 🌟
 
 Mocking Star is a powerful request mocking tool designed to simplify the process of http request mocking, network debugging, and using UI tests for your mobile applications. <br>
