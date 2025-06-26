@@ -20,6 +20,7 @@ public enum MockServerHTTPMethod: String {
     case get = "GET"
     case put = "PUT"
     case delete = "DELETE"
+    case patch = "PATCH"
 }
 
 public extension BaseMockXCTest {
